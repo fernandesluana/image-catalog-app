@@ -17,7 +17,10 @@ class MainActivity : ComponentActivity() {
             ImageCatalogAppTheme {
                 val viewModel = viewModel<HomeViewModel>()
 
-                HomeScreen(images = viewModel.images)
+                HomeScreen(
+                    images = viewModel.images,
+                    onImageClick = {}
+                )
 
 
 
