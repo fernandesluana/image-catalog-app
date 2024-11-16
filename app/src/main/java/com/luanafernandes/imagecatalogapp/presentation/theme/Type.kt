@@ -1,4 +1,4 @@
-package com.luanafernandes.imagecatalogapp.ui.theme
+package com.luanafernandes.imagecatalogapp.presentation.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

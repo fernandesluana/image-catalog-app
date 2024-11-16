@@ -1,4 +1,4 @@
-package com.luanafernandes.imagecatalogapp.ui.theme
+package com.luanafernandes.imagecatalogapp.presentation.theme
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
