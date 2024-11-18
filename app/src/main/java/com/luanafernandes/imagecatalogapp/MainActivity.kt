@@ -18,7 +18,9 @@ import com.luanafernandes.imagecatalogapp.presentation.home_screen.HomeScreen
 import com.luanafernandes.imagecatalogapp.presentation.home_screen.HomeViewModel
 import com.luanafernandes.imagecatalogapp.presentation.navigation.NavGraphSetup
 import com.luanafernandes.imagecatalogapp.presentation.theme.ImageCatalogAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
