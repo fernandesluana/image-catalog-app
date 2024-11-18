@@ -1,6 +1,7 @@
 package com.luanafernandes.imagecatalogapp.presentation.home_screen.component
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -8,6 +9,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import com.luanafernandes.imagecatalogapp.domain.model.UnsplashImage
 
@@ -15,7 +17,9 @@ import com.luanafernandes.imagecatalogapp.domain.model.UnsplashImage
 fun ImageVerticalGrid(
     modifier: Modifier = Modifier,
     images: List<UnsplashImage>,
-    onImageClick: (String) -> Unit
+    onImageClick: (String) -> Unit,
+    onImageDragStart: (UnsplashImage?) -> Unit,
+    onImageDragEnd: (UnsplashImage?) -> Unit
 ) {
     LazyVerticalStaggeredGrid(
         modifier = modifier,
@@ -28,7 +32,16 @@ fun ImageVerticalGrid(
             ImageCard(
                 image = image,
                 modifier = Modifier
-                    .clickable { onImageClick(image.id) })
+                    .clickable { onImageClick(image.id) }
+                    .pointerInput(Unit) {
+                        detectDragGesturesAfterLongPress(
+                            onDragStart = { onImageDragStart(image) },
+                            onDragCancel = { onImageDragEnd(image)},
+                            onDragEnd = { onImageDragEnd(image)},
+                            onDrag = {_,_ ->}
+                        )
+                    }
+            )
 
         }
     }

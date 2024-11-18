@@ -15,6 +15,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -24,6 +28,7 @@ import com.luanafernandes.imagecatalogapp.domain.model.UnsplashImage
 import com.luanafernandes.imagecatalogapp.presentation.home_screen.component.ImageCard
 import com.luanafernandes.imagecatalogapp.presentation.home_screen.component.ImageCatalogTopAppBar
 import com.luanafernandes.imagecatalogapp.presentation.home_screen.component.ImageVerticalGrid
+import com.luanafernandes.imagecatalogapp.presentation.home_screen.component.ZoomedImageCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,6 +39,9 @@ fun HomeScreen(
     onSearchClick: () -> Unit,
     onFavoriteClick: () -> Unit
 ) {
+    var showImagePreview by remember { mutableStateOf(false) }
+    var activeImage by remember { mutableStateOf<UnsplashImage?>(null) }
+
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -48,7 +56,14 @@ fun HomeScreen(
 
             ImageVerticalGrid(
                 images = images,
-                onImageClick = onImageClick
+                onImageClick = onImageClick,
+                onImageDragStart = {image ->
+                    activeImage = image
+                    showImagePreview = true
+                },
+                onImageDragEnd = {
+                    showImagePreview = false
+                }
             )
         }
         FloatingActionButton(
@@ -64,6 +79,11 @@ fun HomeScreen(
                 tint = MaterialTheme.colorScheme.background
             )
         }
+        ZoomedImageCard(
+            modifier = Modifier.padding(20.dp),
+            isVisible = showImagePreview,
+            image = activeImage
+        )
     }
 
 
