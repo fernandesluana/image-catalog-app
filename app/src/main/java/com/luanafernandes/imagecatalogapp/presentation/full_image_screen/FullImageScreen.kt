@@ -13,10 +13,6 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -37,8 +33,8 @@ import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.luanafernandes.imagecatalogapp.R
 import com.luanafernandes.imagecatalogapp.domain.model.UnsplashImage
-import com.luanafernandes.imagecatalogapp.presentation.home_screen.component.FullImageViewTopBar
-import com.luanafernandes.imagecatalogapp.presentation.home_screen.component.ImageLoadingBar
+import com.luanafernandes.imagecatalogapp.presentation.component.FullImageViewTopBar
+import com.luanafernandes.imagecatalogapp.presentation.component.ImageLoadingBar
 import com.luanafernandes.imagecatalogapp.presentation.util.RememberWindowInsetsController
 import com.luanafernandes.imagecatalogapp.presentation.util.toggleStatusBar
 import kotlinx.coroutines.launch
@@ -49,7 +45,7 @@ import kotlin.math.max
 fun FullImageScreen(
     image: UnsplashImage?,
     onBackClick: () -> Unit,
-    onPhotographerImageClick: (String) -> Unit,
+    onPhotographerNameClick: (String) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     var showBars by rememberSaveable { mutableStateOf(false) }
@@ -138,7 +134,7 @@ fun FullImageScreen(
             image = image,
             isVisible = showBars,
             onBackClick = onBackClick,
-            onPhotographerImageClick = onPhotographerImageClick,
+            onPhotographerNameClick = onPhotographerNameClick,
             onDownloadImageClick = {}
         )
 

@@ -1,4 +1,4 @@
-package com.luanafernandes.imagecatalogapp.presentation.home_screen.component
+package com.luanafernandes.imagecatalogapp.presentation.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress

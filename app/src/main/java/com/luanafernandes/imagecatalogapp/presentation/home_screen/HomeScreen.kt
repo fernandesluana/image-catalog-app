@@ -25,10 +25,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.luanafernandes.imagecatalogapp.R
 import com.luanafernandes.imagecatalogapp.domain.model.UnsplashImage
-import com.luanafernandes.imagecatalogapp.presentation.home_screen.component.ImageCard
-import com.luanafernandes.imagecatalogapp.presentation.home_screen.component.ImageCatalogTopAppBar
-import com.luanafernandes.imagecatalogapp.presentation.home_screen.component.ImageVerticalGrid
-import com.luanafernandes.imagecatalogapp.presentation.home_screen.component.ZoomedImageCard
+import com.luanafernandes.imagecatalogapp.presentation.component.ImageCard
+import com.luanafernandes.imagecatalogapp.presentation.component.ImageCatalogTopAppBar
+import com.luanafernandes.imagecatalogapp.presentation.component.ImageVerticalGrid
+import com.luanafernandes.imagecatalogapp.presentation.component.ZoomedImageCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

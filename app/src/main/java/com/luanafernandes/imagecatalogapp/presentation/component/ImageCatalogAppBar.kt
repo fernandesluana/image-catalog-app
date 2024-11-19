@@ -1,4 +1,4 @@
-package com.luanafernandes.imagecatalogapp.presentation.home_screen.component
+package com.luanafernandes.imagecatalogapp.presentation.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -80,7 +80,7 @@ fun FullImageViewTopBar(
     modifier: Modifier = Modifier,
     image : UnsplashImage?,
     onBackClick: () -> Unit,
-    onPhotographerImageClick: (String) -> Unit,
+    onPhotographerNameClick: (String) -> Unit,
     onDownloadImageClick: () -> Unit,
     isVisible : Boolean
 ){
@@ -109,7 +109,7 @@ fun FullImageViewTopBar(
             Spacer(modifier = Modifier.width(10.dp))
             Column (
                 modifier = Modifier.clickable {
-                    image?.let { onPhotographerImageClick(it.photographerProfileImgUrl) }
+                    image?.let { onPhotographerNameClick(it.photographerProfileLink) }
                 }
             ){
                 Text(

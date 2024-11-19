@@ -1,4 +1,4 @@
-package com.luanafernandes.imagecatalogapp.presentation.home_screen.component
+package com.luanafernandes.imagecatalogapp.presentation.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
