@@ -1,4 +1,4 @@
-package com.luanafernandes.imagecatalogapp
+package com.luanafernandes.imagecatalogapp.presentation
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -12,10 +12,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
-import com.luanafernandes.imagecatalogapp.presentation.home_screen.HomeScreen
-import com.luanafernandes.imagecatalogapp.presentation.home_screen.HomeViewModel
 import com.luanafernandes.imagecatalogapp.presentation.navigation.NavGraphSetup
 import com.luanafernandes.imagecatalogapp.presentation.theme.ImageCatalogAppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,9 +41,6 @@ class MainActivity : ComponentActivity() {
                     )
 
                 }
-
-
-
 
             }
         }

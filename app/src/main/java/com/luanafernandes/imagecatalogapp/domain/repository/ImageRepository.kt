@@ -5,4 +5,6 @@ import com.luanafernandes.imagecatalogapp.domain.model.UnsplashImage
 interface ImageRepository {
 
     suspend fun getFeedImages(): List<UnsplashImage>
+
+    suspend fun getImage(imageId: String): UnsplashImage
 }

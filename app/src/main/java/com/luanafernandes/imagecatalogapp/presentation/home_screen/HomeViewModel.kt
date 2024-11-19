@@ -5,15 +5,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.luanafernandes.imagecatalogapp.data.repository.ImageRepositoryImpl
 import com.luanafernandes.imagecatalogapp.domain.model.UnsplashImage
 import com.luanafernandes.imagecatalogapp.domain.repository.ImageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
 @HiltViewModel
-class HomeViewModel@Inject constructor(
-    private val repository: ImageRepository
+class HomeViewModel @Inject constructor(
+    private val repository: ImageRepositoryImpl
 ): ViewModel() {
 
     var images : List<UnsplashImage> by  mutableStateOf(emptyList())
