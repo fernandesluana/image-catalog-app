@@ -1,13 +1,17 @@
 package com.luanafernandes.imagecatalogapp.di
 
+import android.content.Context
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.luanafernandes.imagecatalogapp.data.remote.UnsplashApiService
+import com.luanafernandes.imagecatalogapp.data.repository.AndroidImageDownloader
 import com.luanafernandes.imagecatalogapp.data.repository.ImageRepositoryImpl
 import com.luanafernandes.imagecatalogapp.data.util.Constants
+import com.luanafernandes.imagecatalogapp.domain.repository.Downloader
 import com.luanafernandes.imagecatalogapp.domain.repository.ImageRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -39,5 +43,14 @@ object AppModule {
     ): ImageRepository {
         return ImageRepositoryImpl(apiService)
     }
+
+    @Provides
+    @Singleton
+    fun provideDownloader(
+        @ApplicationContext context: Context
+    ): Downloader {
+        return AndroidImageDownloader(context)
+    }
+
 
 }

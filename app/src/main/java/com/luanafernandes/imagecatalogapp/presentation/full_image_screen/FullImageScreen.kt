@@ -1,5 +1,6 @@
 package com.luanafernandes.imagecatalogapp.presentation.full_image_screen
 
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -13,6 +14,8 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -27,29 +30,36 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.luanafernandes.imagecatalogapp.R
 import com.luanafernandes.imagecatalogapp.domain.model.UnsplashImage
+import com.luanafernandes.imagecatalogapp.presentation.component.DownloadOptionsBottomSheet
 import com.luanafernandes.imagecatalogapp.presentation.component.FullImageViewTopBar
+import com.luanafernandes.imagecatalogapp.presentation.component.ImageDownloadOptions
 import com.luanafernandes.imagecatalogapp.presentation.component.ImageLoadingBar
 import com.luanafernandes.imagecatalogapp.presentation.util.RememberWindowInsetsController
 import com.luanafernandes.imagecatalogapp.presentation.util.toggleStatusBar
 import kotlinx.coroutines.launch
 import kotlin.math.max
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun FullImageScreen(
     image: UnsplashImage?,
     onBackClick: () -> Unit,
     onPhotographerNameClick: (String) -> Unit,
+    onDownloadImageClick: (String, String?) -> Unit
 ) {
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var showBars by rememberSaveable { mutableStateOf(false) }
     val windowInsetsController = RememberWindowInsetsController()
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    var isDownloadBottomSheetOpen by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = Unit) {
         windowInsetsController.toggleStatusBar(show = showBars)
@@ -59,6 +69,26 @@ fun FullImageScreen(
         windowInsetsController.toggleStatusBar(show = true)
         onBackClick()
     }
+
+    DownloadOptionsBottomSheet(
+        isOpen = isDownloadBottomSheetOpen,
+        sheetState = sheetState,
+        onDismissRequest = { isDownloadBottomSheetOpen = false },
+        onOptionClick = { option ->
+            scope.launch { sheetState.hide() }.invokeOnCompletion {
+                if(!sheetState.isVisible) isDownloadBottomSheetOpen = false
+            }
+            val url = when (option){
+                ImageDownloadOptions.SMALL -> image?.imageUrlSmall
+                ImageDownloadOptions.MEDIUM -> image?.imageUrlRegular
+                ImageDownloadOptions.LARGE -> image?.imageUrlRaw
+            }
+            url?.let {
+                onDownloadImageClick(it, image?.description?.take(20))
+                Toast.makeText(context, "Downloading...", Toast.LENGTH_SHORT).show()
+            }
+        }
+    )
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -135,7 +165,7 @@ fun FullImageScreen(
             isVisible = showBars,
             onBackClick = onBackClick,
             onPhotographerNameClick = onPhotographerNameClick,
-            onDownloadImageClick = {}
+            onDownloadImageClick = { isDownloadBottomSheetOpen = true}
         )
 
 
