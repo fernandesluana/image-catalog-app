@@ -8,8 +8,12 @@ import androidx.lifecycle.viewModelScope
 import com.luanafernandes.imagecatalogapp.data.repository.ImageRepositoryImpl
 import com.luanafernandes.imagecatalogapp.domain.model.UnsplashImage
 import com.luanafernandes.imagecatalogapp.domain.repository.ImageRepository
+import com.luanafernandes.imagecatalogapp.presentation.util.SnackbarEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import java.net.UnknownHostException
 import javax.inject.Inject
 
 
@@ -17,6 +21,9 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val repository: ImageRepositoryImpl
 ): ViewModel() {
+
+    private val _snackbarEvent = Channel<SnackbarEvent>()
+    val snackbarEvent = _snackbarEvent.receiveAsFlow()
 
     var images : List<UnsplashImage> by  mutableStateOf(emptyList())
         private set
@@ -27,8 +34,19 @@ class HomeViewModel @Inject constructor(
 
     private fun getImages() {
         viewModelScope.launch{
-            val result = repository.getFeedImages()
-            images = result
+            try {
+                val result = repository.getFeedImages()
+                images = result
+            } catch (e: UnknownHostException) {
+                _snackbarEvent.send(
+                    SnackbarEvent(message = "No internet connection. Please check your network.")
+                )
+            }catch (e: Exception) {
+                _snackbarEvent.send(
+                    SnackbarEvent(message = "Something went wrong: ${e.message}")
+                )
+            }
+
         }
     }
 

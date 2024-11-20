@@ -1,6 +1,7 @@
 package com.luanafernandes.imagecatalogapp.presentation.navigation
 
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -20,7 +21,8 @@ import com.luanafernandes.imagecatalogapp.presentation.search_screen.SearchScree
 @Composable
 fun NavGraphSetup(
     navController: NavHostController,
-    scrollBehaviour: TopAppBarScrollBehavior
+    scrollBehaviour: TopAppBarScrollBehavior,
+    snackbarHostState: SnackbarHostState
 ){
     NavHost(
         navController = navController,
@@ -39,7 +41,9 @@ fun NavGraphSetup(
                 },
                 onFavoriteClick = {
                     navController.navigate(Routes.FavoritesScreen)
-                }
+                },
+                snackbarHostState = snackbarHostState,
+                snackBarEvent = homeViewModel.snackbarEvent,
             )
         }
         composable<Routes.SearchScreen> {
@@ -55,6 +59,8 @@ fun NavGraphSetup(
         composable<Routes.FullImageScreen> {
             val fullImageViewModel: FullImageViewModel = hiltViewModel()
             FullImageScreen(
+                snackbarHostState = snackbarHostState,
+                snackBarEvent = fullImageViewModel.snackbarEvent,
                 image = fullImageViewModel.image,
                 onBackClick = { navController.navigateUp() },
                 onPhotographerNameClick = { profileLink ->

@@ -12,9 +12,11 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,6 +31,8 @@ import com.luanafernandes.imagecatalogapp.presentation.component.ImageCard
 import com.luanafernandes.imagecatalogapp.presentation.component.ImageCatalogTopAppBar
 import com.luanafernandes.imagecatalogapp.presentation.component.ImageVerticalGrid
 import com.luanafernandes.imagecatalogapp.presentation.component.ZoomedImageCard
+import com.luanafernandes.imagecatalogapp.presentation.util.SnackbarEvent
+import kotlinx.coroutines.flow.Flow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,10 +41,22 @@ fun HomeScreen(
     images: List<UnsplashImage>,
     onImageClick: (String) -> Unit,
     onSearchClick: () -> Unit,
-    onFavoriteClick: () -> Unit
+    onFavoriteClick: () -> Unit,
+    snackbarHostState: SnackbarHostState,
+    snackBarEvent: Flow<SnackbarEvent>
 ) {
     var showImagePreview by remember { mutableStateOf(false) }
     var activeImage by remember { mutableStateOf<UnsplashImage?>(null) }
+
+    LaunchedEffect(key1 = true){
+        snackBarEvent.collect { event ->
+            snackbarHostState.showSnackbar(
+                message = event.message,
+                duration = event.duration
+            )
+        }
+
+    }
 
     Box(
         modifier = Modifier.fillMaxSize()
