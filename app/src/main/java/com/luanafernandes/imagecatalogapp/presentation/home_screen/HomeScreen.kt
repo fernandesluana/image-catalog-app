@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.paging.compose.LazyPagingItems
 import com.luanafernandes.imagecatalogapp.R
 import com.luanafernandes.imagecatalogapp.domain.model.UnsplashImage
 import com.luanafernandes.imagecatalogapp.presentation.component.ImageCard
@@ -37,13 +38,16 @@ import kotlinx.coroutines.flow.Flow
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    scrollBehavior: TopAppBarScrollBehavior,
-    images: List<UnsplashImage>,
     onImageClick: (String) -> Unit,
-    onSearchClick: () -> Unit,
-    onFavoriteClick: () -> Unit,
+    images: LazyPagingItems<UnsplashImage>,
+    scrollBehavior: TopAppBarScrollBehavior,
+    onBackClick: () -> Unit,
     snackbarHostState: SnackbarHostState,
-    snackBarEvent: Flow<SnackbarEvent>
+    snackBarEvent: Flow<SnackbarEvent>,
+    onToggleFavoriteStatus: (UnsplashImage) -> Unit,
+    favoriteImageIds: List<String>,
+    onFavoriteClick: () -> Unit,
+    onSearchClick: () -> Unit,
 ) {
     var showImagePreview by remember { mutableStateOf(false) }
     var activeImage by remember { mutableStateOf<UnsplashImage?>(null) }
@@ -70,7 +74,7 @@ fun HomeScreen(
                 onSearchClick = onSearchClick
             )
 
-/*            ImageVerticalGrid(
+            ImageVerticalGrid(
                 images = images,
                 onImageClick = onImageClick,
                 onImageDragStart = {image ->
@@ -79,8 +83,10 @@ fun HomeScreen(
                 },
                 onImageDragEnd = {
                     showImagePreview = false
-                }
-            )*/
+                },
+                onToggleFavoriteStatus = onToggleFavoriteStatus,
+                favoriteImageIds = favoriteImageIds
+            )
         }
         FloatingActionButton(
             modifier = Modifier

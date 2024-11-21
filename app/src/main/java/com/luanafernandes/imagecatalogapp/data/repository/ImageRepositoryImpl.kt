@@ -1,6 +1,7 @@
 package com.luanafernandes.imagecatalogapp.data.repository
 
 import android.nfc.tech.MifareUltralight.PAGE_SIZE
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -9,6 +10,7 @@ import com.luanafernandes.imagecatalogapp.data.local.ImageCatalogDatabase
 import com.luanafernandes.imagecatalogapp.data.mapper.toDomainModel
 import com.luanafernandes.imagecatalogapp.data.mapper.toDomainModelList
 import com.luanafernandes.imagecatalogapp.data.mapper.toFavoriteImageEntity
+import com.luanafernandes.imagecatalogapp.data.paging.ImageFeedRemoteMediator
 import com.luanafernandes.imagecatalogapp.data.paging.SearchPagingSource
 import com.luanafernandes.imagecatalogapp.data.remote.UnsplashApiService
 import com.luanafernandes.imagecatalogapp.data.util.Constants.ITEMS_PER_PAGE
@@ -18,15 +20,25 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
+@OptIn(ExperimentalPagingApi::class)
 class ImageRepositoryImpl @Inject constructor (
     private val unsplashApi: UnsplashApiService,
     private val database: ImageCatalogDatabase
 ): ImageRepository {
 
     private val favoriteImagesDao = database.favoriteImagesDao()
+    private val imageFeedDao = database.imageFeedDao()
 
-    override suspend fun getFeedImages(): List<UnsplashImage> {
-        return unsplashApi.getFeedImages().toDomainModelList()
+
+    override fun getFeedImages(): Flow<PagingData<UnsplashImage>> {
+        return Pager (
+            config = PagingConfig(pageSize = ITEMS_PER_PAGE),
+            remoteMediator = ImageFeedRemoteMediator(unsplashApi, database),
+            pagingSourceFactory = { imageFeedDao.getAllFeedImages() }
+        ).flow
+            .map { pagingData ->
+                pagingData.map { it.toDomainModel() }
+            }
     }
 
     override suspend fun getImage(imageId: String): UnsplashImage {

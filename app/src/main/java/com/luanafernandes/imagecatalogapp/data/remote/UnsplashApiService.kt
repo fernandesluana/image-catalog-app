@@ -13,7 +13,10 @@ interface UnsplashApiService {
 
     @Headers("Authorization: Client-ID $API_KEY")
     @GET("/photos")
-    suspend fun getFeedImages() : List<UnsplashImageDto>
+    suspend fun getFeedImages(
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int
+    ) : List<UnsplashImageDto>
 
     @Headers("Authorization: Client-ID $API_KEY")
     @GET("/photos/{id}")
