@@ -70,7 +70,7 @@ fun HomeScreen(
                 onSearchClick = onSearchClick
             )
 
-            ImageVerticalGrid(
+/*            ImageVerticalGrid(
                 images = images,
                 onImageClick = onImageClick,
                 onImageDragStart = {image ->
@@ -80,7 +80,7 @@ fun HomeScreen(
                 onImageDragEnd = {
                     showImagePreview = false
                 }
-            )
+            )*/
         }
         FloatingActionButton(
             modifier = Modifier

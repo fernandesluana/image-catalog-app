@@ -1,10 +1,17 @@
 package com.luanafernandes.imagecatalogapp.data.repository
 
+import android.nfc.tech.MifareUltralight.PAGE_SIZE
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.luanafernandes.imagecatalogapp.data.mapper.toDomainModel
 import com.luanafernandes.imagecatalogapp.data.mapper.toDomainModelList
+import com.luanafernandes.imagecatalogapp.data.paging.SearchPagingSource
 import com.luanafernandes.imagecatalogapp.data.remote.UnsplashApiService
+import com.luanafernandes.imagecatalogapp.data.util.Constants.ITEMS_PER_PAGE
 import com.luanafernandes.imagecatalogapp.domain.model.UnsplashImage
 import com.luanafernandes.imagecatalogapp.domain.repository.ImageRepository
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ImageRepositoryImpl @Inject constructor (
@@ -16,5 +23,14 @@ class ImageRepositoryImpl @Inject constructor (
 
     override suspend fun getImage(imageId: String): UnsplashImage {
         return unsplashApi.getImage(imageId).toDomainModel()
+    }
+
+    override fun searchImages(query: String): Flow<PagingData<UnsplashImage>> {
+        return Pager (
+            config = PagingConfig(pageSize = ITEMS_PER_PAGE),
+            pagingSourceFactory = {
+                SearchPagingSource(unsplashApi, query)
+            }
+        ).flow
     }
 }
