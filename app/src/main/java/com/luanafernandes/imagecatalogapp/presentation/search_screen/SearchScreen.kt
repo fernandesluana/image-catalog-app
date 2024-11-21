@@ -65,7 +65,9 @@ fun SearchScreen(
     snackbarHostState: SnackbarHostState,
     snackBarEvent: Flow<SnackbarEvent>,
     searchQuery: String,
-    onSearchQueryChange: (String) -> Unit
+    onSearchQueryChange: (String) -> Unit,
+    onToggleFavoriteStatus: (UnsplashImage) -> Unit,
+    favoriteImageIds: List<String>
 ) {
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
@@ -175,7 +177,9 @@ fun SearchScreen(
                     },
                     onImageDragEnd = {
                         showImagePreview = false
-                    }
+                    },
+                    onToggleFavoriteStatus = onToggleFavoriteStatus,
+                    favoriteImageIds = favoriteImageIds
                 )
             }
 

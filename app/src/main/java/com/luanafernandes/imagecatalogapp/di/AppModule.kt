@@ -1,12 +1,15 @@
 package com.luanafernandes.imagecatalogapp.di
 
 import android.content.Context
+import androidx.room.Room
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import com.luanafernandes.imagecatalogapp.data.local.ImageCatalogDatabase
 import com.luanafernandes.imagecatalogapp.data.remote.UnsplashApiService
 import com.luanafernandes.imagecatalogapp.data.repository.AndroidImageDownloader
 import com.luanafernandes.imagecatalogapp.data.repository.ImageRepositoryImpl
 import com.luanafernandes.imagecatalogapp.data.repository.NetworkConnectivityObserverImpl
 import com.luanafernandes.imagecatalogapp.data.util.Constants
+import com.luanafernandes.imagecatalogapp.data.util.Constants.IMAGE_CATALOG_DATABASE
 import com.luanafernandes.imagecatalogapp.domain.repository.Downloader
 import com.luanafernandes.imagecatalogapp.domain.repository.ImageRepository
 import com.luanafernandes.imagecatalogapp.domain.repository.NetworkConnectivityObserver
@@ -43,10 +46,24 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideDatabase(
+        @ApplicationContext context: Context
+    ): ImageCatalogDatabase {
+        return Room.databaseBuilder(
+            context,
+            ImageCatalogDatabase::class.java,
+            IMAGE_CATALOG_DATABASE
+        )
+            .build()
+    }
+
+    @Provides
+    @Singleton
     fun provideImageRepository(
-        apiService: UnsplashApiService
+        apiService: UnsplashApiService,
+        database: ImageCatalogDatabase
     ): ImageRepository {
-        return ImageRepositoryImpl(apiService)
+        return ImageRepositoryImpl(apiService, database)
     }
 
     @Provides

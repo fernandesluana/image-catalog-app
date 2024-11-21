@@ -43,7 +43,8 @@ fun ImageCatalogTopAppBar(
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior,
     title: String = "Image Catalog",
-    onSearchClick: () -> Unit = {}
+    onSearchClick: () -> Unit = {},
+    navigationIcon: @Composable () -> Unit = {}
 ) {
     CenterAlignedTopAppBar(
         modifier = modifier,
@@ -71,7 +72,8 @@ fun ImageCatalogTopAppBar(
         },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
             scrolledContainerColor = MaterialTheme.colorScheme.background
-        )
+        ),
+        navigationIcon = navigationIcon
     )
 }
 

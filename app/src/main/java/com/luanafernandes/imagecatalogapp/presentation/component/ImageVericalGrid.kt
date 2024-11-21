@@ -17,10 +17,12 @@ import com.luanafernandes.imagecatalogapp.domain.model.UnsplashImage
 @Composable
 fun ImageVerticalGrid(
     modifier: Modifier = Modifier,
+    favoriteImageIds: List<String>,
     images: LazyPagingItems<UnsplashImage>,
     onImageClick: (String) -> Unit,
     onImageDragStart: (UnsplashImage?) -> Unit,
-    onImageDragEnd: (UnsplashImage?) -> Unit
+    onImageDragEnd: (UnsplashImage?) -> Unit,
+    onToggleFavoriteStatus: (UnsplashImage) -> Unit
 ) {
     LazyVerticalStaggeredGrid(
         modifier = modifier,
@@ -42,7 +44,9 @@ fun ImageVerticalGrid(
                             onDragEnd = { onImageDragEnd(image)},
                             onDrag = {_,_ ->}
                         )
-                    }
+                    },
+                onToggleFavoriteStatus = { image?.let { onToggleFavoriteStatus(it) } },
+                isFavorite = favoriteImageIds.contains(image?.id)
             )
         }
 

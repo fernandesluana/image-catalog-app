@@ -1,4 +1,4 @@
-package com.luanafernandes.imagecatalogapp.presentation.search_screen
+package com.luanafernandes.imagecatalogapp.presentation.favorites_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -21,30 +21,25 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class SearchViewModel @Inject constructor(
+class FavoritesViewModel @Inject constructor(
     private val repository: ImageRepositoryImpl
 ): ViewModel() {
 
     private val _snackbarEvent = Channel<SnackbarEvent>()
     val snackbarEvent = _snackbarEvent.receiveAsFlow()
 
-    private val _searchImages = MutableStateFlow<PagingData<UnsplashImage>>(PagingData.empty())
-    val searchImages = _searchImages
-
-    fun searchImages(query: String){
-        viewModelScope.launch {
-            try {
-                repository
-                    .searchImages(query)
-                    .cachedIn(viewModelScope)
-                    .collect {
-                    _searchImages.value = it
-                }
-            } catch (e: UnknownHostException){
-                _snackbarEvent.send(SnackbarEvent(message = "Something went wrong. ${e.message}"))
-            }
+    val favoriteImages: StateFlow<PagingData<UnsplashImage>> = repository.getAllFavoriteImages()
+        .catch {exception ->
+            _snackbarEvent.send(
+                SnackbarEvent(message = "Something went wrong. ${exception.message}")
+            )
         }
-    }
+        .cachedIn(viewModelScope)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = PagingData.empty()
+        )
 
     val favoriteImagesIds: StateFlow<List<String>> = repository.getFavoriteImages()
         .catch {exception ->
