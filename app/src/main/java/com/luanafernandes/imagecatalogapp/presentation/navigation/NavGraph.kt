@@ -16,6 +16,7 @@ import com.luanafernandes.imagecatalogapp.presentation.home_screen.HomeScreen
 import com.luanafernandes.imagecatalogapp.presentation.home_screen.HomeViewModel
 import com.luanafernandes.imagecatalogapp.presentation.profile_screen.ProfileScreen
 import com.luanafernandes.imagecatalogapp.presentation.search_screen.SearchScreen
+import com.luanafernandes.imagecatalogapp.presentation.search_screen.SearchViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,8 +48,14 @@ fun NavGraphSetup(
             )
         }
         composable<Routes.SearchScreen> {
+            val searchViewModel : SearchViewModel = hiltViewModel()
             SearchScreen(
-                onBackClick = { navController.navigateUp() }
+                snackbarHostState = snackbarHostState,
+                snackBarEvent = searchViewModel.snackbarEvent,
+                onBackClick = { navController.navigateUp() },
+                onImageClick = { imageId ->
+                    navController.navigate(Routes.FullImageScreen(imageId))
+                }
             )
         }
         composable<Routes.FavoritesScreen> {
